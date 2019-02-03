@@ -9,16 +9,15 @@ We are given a python script which is executing some sort of primitive-looking b
 After poking a bit at common block cipher attacks, I realized that this encryption scheme suffers from the same weakness as 2-DES, namely the MITM attack. The following function is key:
 
 '''
+    def toofun(key, pt):
+        assert len(key) == 2 * KEY_LENGTH
+        key1 = key[:KEY_LENGTH]
+        key2 = key[KEY_LENGTH:]
 
-def toofun(key, pt):
-    assert len(key) == 2 * KEY_LENGTH
-    key1 = key[:KEY_LENGTH]
-    key2 = key[KEY_LENGTH:]
+        ct1 = unhexlify(fun(key1, pt))
+        ct2 = fun(key2, ct1)
 
-    ct1 = unhexlify(fun(key1, pt))
-    ct2 = fun(key2, ct1)
-
-    return ct2
+        return ct2
 
 '''
 
@@ -57,12 +56,11 @@ This encryption scheme uses xor rounds, with an S-box and permutation within eac
 Building the inverted S-box and permutation table is not too difficult. The following code sufficees to invert the permutation table:
 
 '''
-
-def reverse_p():
-    _p = [0 for i in range(len(p))]
-    for idx, elt in enumerate(p):
-        _p[elt] = idx
-    print(_p)
+    def reverse_p():
+        _p = [0 for i in range(len(p))]
+        for idx, elt in enumerate(p):
+            _p[elt] = idx
+        print(_p)
 '''
 
 A similar function was used to swap the inputs and outputs to the S-box. 
@@ -70,19 +68,17 @@ A similar function was used to swap the inputs and outputs to the S-box.
 Once the inverted tables were generated, the decryption scheme simply reversed the order that the components are applied, over 16 rounds. The fun decryptor is shown below:
 
 '''
-
-def fun_decryptor(key, ct):
-    ct = bytearray(ct)
-    key = bytearray(unhexlify(md5(key).hexdigest()))
-    for _ in range(ROUND_COUNT):
-        temp = bytearray(BLOCK_LENGTH)
-        for i in range(BLOCK_LENGTH):
-            temp[i] = ct[p_rev[i]]
-        for i in range(BLOCK_LENGTH):
-            ct[i] = sbox_rev[temp[i]]
-        ct = xor(ct, key)
-    return hexlify(ct)
-
+    def fun_decryptor(key, ct):
+        ct = bytearray(ct)
+        key = bytearray(unhexlify(md5(key).hexdigest()))
+        for _ in range(ROUND_COUNT):
+            temp = bytearray(BLOCK_LENGTH)
+            for i in range(BLOCK_LENGTH):
+                temp[i] = ct[p_rev[i]]
+            for i in range(BLOCK_LENGTH):
+                ct[i] = sbox_rev[temp[i]]
+            ct = xor(ct, key)
+        return hexlify(ct)
 '''
 
 I also quickly wrote up the two-round deecryptor for the final step:
@@ -106,24 +102,24 @@ With my decryptor finished, I needeed to bruteforce my two sets. The first one w
 
 '''
 
-def bruteforce_collision():
-    pt = b"16 bit plaintext"
-    ct = unhexlify(b'0467a52afa8f15cfb8f0ea40365a6692')
-    print(pt)
+    def bruteforce_collision():
+        pt = b"16 bit plaintext"
+        ct = unhexlify(b'0467a52afa8f15cfb8f0ea40365a6692')
+        print(pt)
 
-    with open("first.txt", "w+") as f:
-        for i in range (0, 256):
-            for j in range (0, 256):
-                for k in range (0, 256):
-                    key = chr(i) + chr(j) + chr(k)
-                    f.write(str(i) + " " + str(j) + " " + str(k) + " " + fun(key, pt) + "\n")
+        with open("first.txt", "w+") as f:
+            for i in range (0, 256):
+                for j in range (0, 256):
+                    for k in range (0, 256):
+                        key = chr(i) + chr(j) + chr(k)
+                        f.write(str(i) + " " + str(j) + " " + str(k) + " " + fun(key, pt) + "\n")
 
-    with open("second.txt", "w+") as f:
-        for i in range (0, 128):
-            for j in range (0, 128):
-                for k in range (0, 128):
-                    key = chr(i) + chr(j) + chr(k)
-                    f.write(str(i) + " " + str(j) + " " + str(k) + " " + fun_decryptor(key, ct) + "\n")
+        with open("second.txt", "w+") as f:
+            for i in range (0, 128):
+                for j in range (0, 128):
+                    for k in range (0, 128):
+                        key = chr(i) + chr(j) + chr(k)
+                        f.write(str(i) + " " + str(j) + " " + str(k) + " " + fun_decryptor(key, ct) + "\n")
 '''
 
 This took around 25 minutes for me to run. When finished, I had two files, each which had one of my sets!
@@ -134,34 +130,34 @@ To find the intermediate entry produced with the correct keys, I needed to find 
 
 '''
 
-t1 = set()
-t2 = set()
+    t1 = set()
+    t2 = set()
 
-with open("first.txt", "r") as f:
-    for line in f:
-        #print(line.split(" ")[3])
-        t1.add(line.split(" ")[3])
+    with open("first.txt", "r") as f:
+        for line in f:
+            #print(line.split(" ")[3])
+            t1.add(line.split(" ")[3])
 
-with open("second.txt", "r") as f:
-    for line in f:
-        t2.add(line.split(" ")[3]) 
+    with open("second.txt", "r") as f:
+        for line in f:
+            t2.add(line.split(" ")[3]) 
 
-collision = t1.intersection(t2).pop().split('\n')[0]
-print(collision)
+    collision = t1.intersection(t2).pop().split('\n')[0]
+    print(collision)
 
-#find the keys associated with that intersection, back in the files
-key = []
-with open("first.txt", "r") as f:
-    for line in f:
-        if line.split(" ")[3].split("\n")[0] == collision:
-            key += [int(x) for x in line.split(" ")[0:3]]
-            
-with open("second.txt", "r") as f:
-    for line in f:
-        if line.split(" ")[3].split("\n")[0] == collision:
-            key += [int(x) for x in line.split(" ")[0:3]]
+    #find the keys associated with that intersection, back in the files
+    key = []
+    with open("first.txt", "r") as f:
+        for line in f:
+            if line.split(" ")[3].split("\n")[0] == collision:
+                key += [int(x) for x in line.split(" ")[0:3]]
 
-key = "".join([chr(val) for val in key])
+    with open("second.txt", "r") as f:
+        for line in f:
+            if line.split(" ")[3].split("\n")[0] == collision:
+                key += [int(x) for x in line.split(" ")[0:3]]
+
+    key = "".join([chr(val) for val in key])
 '''
 
 With the key discovered, all I had to do was apply my `toofun` decryption function, shown above, on the encrypted flag, and retrieve the plaintext flag!
