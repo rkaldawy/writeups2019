@@ -9,6 +9,7 @@ We are given a python script which is executing some sort of primitive-looking b
 After poking a bit at common block cipher attacks, I realized that this encryption scheme suffers from the same weakness as 2-DES, namely the MITM attack. The following function is key:
 
 '''
+
 def toofun(key, pt):
     assert len(key) == 2 * KEY_LENGTH
     key1 = key[:KEY_LENGTH]
@@ -56,6 +57,7 @@ This encryption scheme uses xor rounds, with an S-box and permutation within eac
 Building the inverted S-box and permutation table is not too difficult. The following code sufficees to invert the permutation table:
 
 '''
+
 def reverse_p():
     _p = [0 for i in range(len(p))]
     for idx, elt in enumerate(p):
@@ -68,6 +70,7 @@ A similar function was used to swap the inputs and outputs to the S-box.
 Once the inverted tables were generated, the decryption scheme simply reversed the order that the components are applied, over 16 rounds. The fun decryptor is shown below:
 
 '''
+
 def fun_decryptor(key, ct):
     ct = bytearray(ct)
     key = bytearray(unhexlify(md5(key).hexdigest()))
@@ -85,6 +88,7 @@ def fun_decryptor(key, ct):
 I also quickly wrote up the two-round deecryptor for the final step:
 
 '''
+
 def toofun_decryptor(key, ct):
     assert len(key) == 2 * KEY_LENGTH
     key1 = key[:KEY_LENGTH]
@@ -96,11 +100,12 @@ def toofun_decryptor(key, ct):
     return pt
 '''
 
-## Bruteforcing the two sets ##
+## Bruteforcing the two sets
 
 With my decryptor finished, I needeed to bruteforce my two sets. The first one would hold the encryption of the sample plaintext with all possible first-time keys, while the second one would hold the decryption of the ciphertext with all possible second-time keys. I decided to write each set into a file, where each line would have a key and its associateed intermediate output. The following produced my sets:
 
 '''
+
 def bruteforce_collision():
     pt = b"16 bit plaintext"
     ct = unhexlify(b'0467a52afa8f15cfb8f0ea40365a6692')
@@ -123,11 +128,12 @@ def bruteforce_collision():
 
 This took around 25 minutes for me to run. When finished, I had two files, each which had one of my sets!
 
-## Finding a collision and decrypting the flag##
+## Finding a collision and decrypting the flag
 
 To find the intermediate entry produced with the correct keys, I needed to find the intersection between my two generated sets. Luckily, Python has a library which finds set intersections very quickly. The following code in my solver finds that intersection, and retroactively discovers the keys associated with that intersection, concatenated into a single 48-bit key:
 
 '''
+
 t1 = set()
 t2 = set()
 
@@ -160,6 +166,6 @@ key = "".join([chr(val) for val in key])
 
 With the key discovered, all I had to do was apply my `toofun` decryption function, shown above, on the encrypted flag, and retrieve the plaintext flag!
 
-## Conclusions ##
+## Conclusions
 
 I had a lot of fun doing this challenge. I don't often see creative block cipher challenges, and this felt like a breath of fresh air from the usual RSA misconfiguration challenge. Thanks to HackIM for making the chal!:
