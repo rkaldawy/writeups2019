@@ -162,4 +162,4 @@ With the key discovered, all I had to do was apply my `toofun` decryption functi
 
 ## Conclusions
 
-I had a lot of fun doing this challenge. I don't often see creative block cipher challenges, and this felt like a breath of fresh air from the usual RSA misconfiguration challenge. Thanks to HackIM for making the chal!:
+I had a lot of fun doing this challenge. I don't often see creative block cipher challenges, and this felt like a breath of fresh air from the usual RSA misconfiguration challenge. Thanks to nullcon for making the chal!:
