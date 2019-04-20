@@ -1,4 +1,4 @@
-# 2FUN Cryto Challenge
+# 2FUN Crypto Challenge
 
 ## Challenge Description:
 
