@@ -46,5 +46,7 @@ Static chunks will form black pixels, while music chunks will form white pixels.
 
 Scanning it will get us the flag: WPI{ju$t\_P1cK\_@\_s0Ng}.
 
-This was the only challenge in WPICTF 2019 that had no solution. In my opinion, stegonography is the hardest CTF category, so it isn't unreasonable that a challenge should have *very few* solves. However, no solves at all is a sign that the challenge did not give people enough of an indicator that they were going in the right direction. In retrospect, I could have put a subtle hint somewhere in the challenge to tell people to look for QR codes. At the very least, I hope people enjoyed listening to the challege, and getting to hear some of the music that I like.
+## Conclusions
+
+This was the only challenge in WPICTF 2019 that had no solves. In my opinion, stegonography is the hardest CTF category, so it isn't unreasonable that a challenge should have *very few* solves. However, no solves at all is a sign that the challenge did not give people enough of an indicator that they were going in the right direction. In retrospect, I could have put a subtle hint somewhere in the challenge to tell people to look for QR codes. At the very least, I hope people enjoyed listening to the challege, and getting to hear some of the music that I like.
 
