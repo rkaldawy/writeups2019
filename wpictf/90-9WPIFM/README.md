@@ -1,4 +1,4 @@
-# 90.9 WPIFM - Stegonography - 300 Points
+# 90.9 WPIFM - Steganography - 300 Points
 
 I (Remy) wrote this challenge, so of course my writeup will be biased... I wrote it! However, this writeup walks through how the challenge could be solved without any prior understanding on how it works.
 
