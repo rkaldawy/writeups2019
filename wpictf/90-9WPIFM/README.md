@@ -18,6 +18,8 @@ Following the drive link, we are presented with a six minute audio file. The aud
 
 So my first intuition here is that data is being encoded in how the data is presented, and *not* within the data itself. Specifically, a further examination is warranted on how the static interrupts the music clips. With that being said, it makes sense to run the audio clip through some editing software to analyze it. Audacity should do the trick here.
 
+![alt text](https://github.com/rkaldawy/writeups2019/blob/master/wpictf/90-9WPIFM/audacity.png "The Audio in Audacity")
+
 Theres a couple pieces of important information we can pry just by looking at the audio. First, and most obviously, static chunks come in units of .25 seconds, while audio chunks come in units of one second. One could (and should) infer that these are the stardard units for ech type of audio. If this audio was binary, a one-second music chunk could be a '1' while a quarter-second static segment could be a '0'.
 
 Second, and perhaps less obviously, the same static sample is being used for each static chunk. Take a look at the chunk between 6.75 and 7.0, and the chunk between 9.0 to 9.25: they are the same! Furthermore, it seems like the author left a full, unaltered sample of the static audio chunk in the first three seconds of the audio. We can use this audio sample as a reference to identify which parts of the audio are static, and which parts are music.
@@ -40,9 +42,9 @@ Interesting. If I didn't know any better, that looks like the makings of the cor
 
 Static chunks will form black pixels, while music chunks will form white pixels. Since we know what the corner patterns of a QR code look like, we can infer what the length of the QR code is, such that we achieve the desired patterns at the corners. Recreating the QR code gives us the following:
 
+![alt text](https://github.com/rkaldawy/writeups2019/blob/master/wpictf/90-9WPIFM/output.bmp "The QR Code")
 
-
-Scanning it will get us the flag: WPI{ju$t\_P1cK\__@\__s0Ng}.
+Scanning it will get us the flag: WPI{ju$t\_P1cK\_@\_s0Ng}.
 
 This was the only challenge in WPICTF 2019 that had no solution. In my opinion, stegonography is the hardest CTF category, so it isn't unreasonable that a challenge should have *very few* solves. However, no solves at all is a sign that the challenge did not give people enough of an indicator that they were going in the right direction. In retrospect, I could have put a subtle hint somewhere in the challenge to tell people to look for QR codes. At the very least, I hope people enjoyed listening to the challege, and getting to hear some of the music that I like.
 
