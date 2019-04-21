@@ -14,7 +14,7 @@ made by rm -k
 
 ## Lookin' at it
 
-Following the drive link, we are presented with a six minute audio file. The audio file has bursts of music interrupted by segments of radio static; it sounds as though someone keeps flipping through radio channels on an old radio. The music itself is a mix of electronic, happy hardcore, future funk, J-pop, and eurobeat. The author of this challenge must be a total weeb... but he does have a good taste in music. At the end of the audio, there is an extended clip of the outro of Modjo's Lady; looks like they found the music they wanted. French house is a nice genre of music.
+Following the drive link, we are presented with a six minute audio file. The audio file has bursts of music interrupted by segments of radio static; it sounds as though someone keeps flipping through radio channels on an old radio. The music itself is a mix of electronic, happy hardcore, future funk, J-pop, gachimuchi, and eurobeat. The author of this challenge must be a total weeb... but he does have a good taste in music. At the end of the audio, there is an extended clip of the outro of Modjo's Lady; looks like they found the music they wanted. French house is a nice genre of music.
 
 So my first intuition here is that data is being encoded in how the data is presented, and *not* within the data itself. Specifically, a further examination is warranted on how the static interrupts the music clips. With that being said, it makes sense to run the audio clip through some editing software to analyze it. Audacity should do the trick here.
 
