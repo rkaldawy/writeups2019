@@ -22,7 +22,7 @@ Hint file from https://drive.google.com/open?id=1EWfM5oBVksVD1an\_SFV-v1gdvcTYKy
 
 There are several components to this challenge. We are given a giant (100 +) megabyte file, an online service which encodes text into the same format found on file, and a picture that looks like it was taken at a sushi restaurant. The photo itself is peculiar... it seems to have a bunch of hints written on a napkin!
 
-
+![alt text](https://github.com/rkaldawy/writeups2019/blob/master/wpictf/sushi/hint.jpg "A Strange Hint")
 
 These hints seem completely unrelated to each other. One of them probably bears relevance to the task at hand, while the others are red herrings.
 
@@ -39,11 +39,7 @@ From there, it takes some time cross referencing the encoding with the hints bef
 
 This last insight is key to breaking the encoding. Namely, the encoding is taking the grid of letters in the hints and using it to trace out characters. The second hint image confirms this insight. For example, the word "HELLO" is traced as:
 
-A   E ABCDE A     A     ABCDE
-F   J F     F     F     F   J    
-KLMNO KLMNO K     K     K   O
-P   T P     P     P     P   T
-U   Y UVWXY UVWXY UVWXY UVWXY
+![alt text](https://github.com/rkaldawy/writeups2019/blob/master/wpictf/sushi/traces.png "Traced Out Letters")
 
 Thus, each "unit" of the encoding is the set of letters required to trace out one letter of the flag. Each letter is then copied an arbitrary number of times within the unit. Each instance of a letter "flips" that letter on and off; thus, an odd quantity of a letter in a unit will lead to that letter being present in the trace of the unit, while an even number of a letter in a unit will lead to that letter not existing in the trace. Finally, some letters are made lowercase, just for laughs. It bears no information about the encoding.
 
