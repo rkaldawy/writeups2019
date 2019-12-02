@@ -17,11 +17,13 @@ Before proceeding, I decided to identify the cryptographic scheme involved. We a
 So what exactly do the encryption parameters of El Gamal mean? A quick Google search yields the following:
 
 c1 = g^x mod p
+
 c2 = m * h^x = m * g^(x * y) mod p
 
 In this case, g^(x * y) is a shared secret between the two parties. So, for each use of the encryption service we get two encryptions: one of the flag, and one of the arbitrary message. Since only the message changes, c1 will not differ betwene them. However, c2 will differ (since the message has changed). Namely,
 
 c2\_old = m * g^(x * y) mod p
+
 c2\_new = m' * g^(x * y) mod p
 
 This is of course assuming that x and y get reused for each encryption (spoiler alert: they do). Notice here that all we need to do to extract message m is to find the inverse of g^(x * y) and multiply it to c2\_old. But how can we extract g^(x * y)? Well, we know the message we used for the second encryption; therefore we can find its inverse. If we multiply that inverse to c2\_new, we can extract g^(x * y). Just like that, we have a working method for snagging our flag. We will exploit the fact that a second message gets encrypted after the flag with the same parameters used for x and y.
